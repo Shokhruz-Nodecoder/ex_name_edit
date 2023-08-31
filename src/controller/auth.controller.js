@@ -10,6 +10,7 @@ const { knex } = require("../database");
 const register = async (req, res, next) => {
   try {
     const { username, password, fullname } = req.body;
+    console.log(req.body)
 
     const validationError = authValidation({
       username,
@@ -26,7 +27,7 @@ const register = async (req, res, next) => {
     if (user) throw new CustomError(409, "Username already in use");
 
     const generate = await generateHash(password);
-
+    console.log(generate)
     const [newUser] = await knex("users")
       .insert({
         username: username.toLowerCase(),
@@ -43,7 +44,7 @@ const register = async (req, res, next) => {
   }
 };
 
-const login = async (req, res) => {
+const login = async (req, res,next) => {
   try {
     const { username, password } = req.body;
 
@@ -68,7 +69,7 @@ const login = async (req, res) => {
 
     res.status(201).json({ message: "Login successful", token });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 

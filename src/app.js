@@ -15,7 +15,8 @@ app.use(fileupload());
 app.use(express.static(process.cwd() + "/uploads"));
 app.use(routes);
 
-app.use(errorHandler);
+app.use(errorHandler)
+
 const bootstrap = async (req, res) => {
   app.listen(config.port, () => {
     console.log(
