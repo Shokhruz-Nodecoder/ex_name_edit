@@ -7,7 +7,7 @@ const filmValidation = (film) => {
     year: Joi.number().required(),
     price: Joi.string().required(),
     file: Joi.string().required(),
-    video_url: Joi.string().required(),
+    video_url: Joi.string().uri().required(),
     release: Joi.date().required(),
   });
   const { error } = Film.validate(film);

@@ -6,14 +6,13 @@ const CustomError = require("../libs/customError");
 const { knex } = require("../database");
 const userValidation = require("../validations/user.validation");
 
-
 const find = async (req, res, next) => {
-    try {
-        const data = await knex("users").select("*");
-        res.status(200).json({ message: "success", data });
-    } catch (error) {
-        next(error);
-    }
+  try {
+    const data = await knex("users").select("*");
+    res.status(200).json({ message: "success", data });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const changeBalance = async (req, res, next) => {
@@ -41,29 +40,30 @@ const create = async (req, res, next) => {
     });
     if (validationError) {
       throw validationError;
-    }else{
+    } else {
+      const user = await knex("users")
+        .select("*")
+        .where({ username: username.toLowerCase() })
+        .first();
 
-    const user = await knex("users")
-      .select("*")
-      .where({ username: username.toLowerCase() })
-      .first();
+      if (user) throw new CustomError(409, "Username already in use");
 
-    if (user) throw new CustomError(409, "Username already in use");
+      const generate = await generateHash(password);
 
-    const generate = await generateHash(password);
+      const [newUser] = await knex("users")
+        .insert({
+          username: username.toLowerCase(),
+          password: generate,
+          fullname,
 
-    const [newUser] = await knex("users")
-      .insert({
-        username: username.toLowerCase(),
-        password: generate,
-        fullname,
-      })
-      .returning("*");
+          is_admin: true,
+        })
+        .returning("*");
 
-    const token = jwt.sign({ id: newUser.id });
+      const token = jwt.sign({ id: newUser.id });
 
-    res.status(201).json({ message: "User successfully created", newUser });
-  }
+      res.status(201).json({ message: "User successfully created", newUser });
+    }
   } catch (error) {
     console.log(error);
     next(error);

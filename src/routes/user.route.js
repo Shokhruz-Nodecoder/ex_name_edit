@@ -1,13 +1,8 @@
 const { Router } = require("express");
-// const {
-//   register,
-//   login,
-//   changePassword,
-// } = require("../controller/auth.controller");
+
 const isAuth = require("../middlewares/isAuth.middleware");
 const currentUser = require("../middlewares/currentUser.middleware");
 const isAdmin = require("../middlewares/isAdmin.middleware");
-const fileUpload = require("../middlewares/fileupload.middleware");
 const { changeBalance, find, create } = require("../controller/user.controller");
 
 const router = new Router();

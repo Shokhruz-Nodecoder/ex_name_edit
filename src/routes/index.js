@@ -1,4 +1,4 @@
 const Auth = require('./auth.route');
 const Films = require('./films.route');
-
-module.exports =[Auth, Films];
+const User = require("./user.route")
+module.exports =[Auth, Films, User];

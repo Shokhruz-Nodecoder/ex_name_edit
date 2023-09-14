@@ -4,7 +4,7 @@ const CustomError = require("../libs/customError");
 
 const fileUpload = async (req, res, next) => {
   try {
-    const file = req.files?.photo;
+    const file = req.files?.file;
     if (!file) throw new CustomError(400, "File is required");
 
     const imageName = `${v4()}${extname(file.name)}`;
