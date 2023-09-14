@@ -70,4 +70,17 @@ const create = async (req, res, next) => {
   }
 };
 
-module.exports = { changeBalance, find, create };
+const statistics = async (req,res, next) =>{
+  try {
+    const {fromDate, toDate} = req.query
+    console.log(req.query)
+
+    const data = await knex("users").select("created_at").groupBy("created_at").havingBetween("created_at", [fromDate, toDate])
+    res.json({message : 'Success', data: data})
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
+module.exports = { changeBalance, find, create, statistics };
